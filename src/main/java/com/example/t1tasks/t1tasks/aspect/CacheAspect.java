@@ -9,7 +9,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import com.example.t1tasks.t1tasks.annotation.Cached;
+import com.example.t1tasks.t1tasks.annotation.Metric;
 
 @Aspect
 @Component
@@ -18,16 +18,16 @@ public class CacheAspect {
     private long defaultTtl;
     private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
 
-    @Around("@annotation(cached)")
-    public Object cache(ProceedingJoinPoint joinPoint, Cached cached) throws Throwable {
+    @Around("@annotation(metric)")
+    public Object cache(ProceedingJoinPoint joinPoint, Metric metric) throws Throwable {
         String key = generateKey(joinPoint);
         CacheEntry entry = cache.get(key);
 
-        if (entry != null && !isExpired(entry, cached.timeToLive())) {
+        if (entry != null && !isExpired(entry, metric.timeLimit())) {
             return entry.getValue();
         }
         Object result = joinPoint.proceed();
-        long ttl = cached.timeToLive() > 0 ? cached.timeToLive() : defaultTtl;
+        long ttl = metric.timeLimit() > 0 ? metric.timeLimit() : defaultTtl;
         cache.put(key, new CacheEntry(result, System.currentTimeMillis(), ttl));
 
         return result;
