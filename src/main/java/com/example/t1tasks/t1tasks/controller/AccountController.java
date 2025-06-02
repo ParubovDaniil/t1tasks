@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.t1tasks.t1tasks.annotation.Cached;
+import com.example.t1tasks.t1tasks.annotation.Metric;
 import com.example.t1tasks.t1tasks.entity.Account;
 import com.example.t1tasks.t1tasks.entity.Client;
 import com.example.t1tasks.t1tasks.repository.AccountRepository;
@@ -69,7 +69,7 @@ public class AccountController {
     // System.out.println("Сохраненный аккаунт: " + savedAccount);
     // return savedAccount;
     // }
-    @Cached(timeToLive = 300) // кэширование на 5 минут
+    @Metric(timeLimit = 300) // кэширование на 5 минут
     @GetMapping("/{id}")
     public ResponseEntity<Account> getById(@PathVariable Long id) {
         return accountRepository.findById(id)

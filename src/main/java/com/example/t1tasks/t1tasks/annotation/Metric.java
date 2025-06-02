@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Cached {
-    long timeToLive() default 0;
+public @interface Metric {
+    long timeLimit() default 0;
 }
